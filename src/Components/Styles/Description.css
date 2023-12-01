@@ -1,0 +1,39 @@
+.detail-prod{
+    width: 600px;
+    padding: 64px;
+}
+
+.desc-div{
+    display: flex;
+    flex-direction: row;
+}
+
+.desc-img{
+    border: 2px solid#f9f9f9;
+    width: 400px;
+    margin: 55px;
+    /* box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px; */
+}
+.detail-head{
+    font-size: 44px;
+    font-family: emoji;
+    font-weight: 600;
+
+}
+.detail-price{
+    font-size: 19px;
+    font-family: emoji;
+}
+.detail-product{
+    
+}
+.detail-cat{
+    font-size: 18px;
+    font-weight: 600;
+}
+.detail-des{
+
+}
+.cart{
+margin: 10px;
+}

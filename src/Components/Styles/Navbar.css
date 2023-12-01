@@ -1,0 +1,18 @@
+.nav-brand{
+    font-size: 32px;
+    font-family: fangsong;
+    font-weight: 600;
+}
+.shop-icon-num{
+    position: absolute;
+    margin-left: 31px;
+    border: 2px solid black;
+    border-radius: 50px;
+    width: 25px;
+    height: 25px;
+    align-items: center;
+    text-align: center;
+}
+.shop-div{
+    margin-right: 20px;
+}

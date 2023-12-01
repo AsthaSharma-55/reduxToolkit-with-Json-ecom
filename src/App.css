@@ -6,7 +6,13 @@
   height: 40vmin;
   pointer-events: none;
 }
+.css-1u3bzj6-MuiFormControl-root-MuiTextField-root { 
+  margin: 18px;
+}
+.css-1ri6ub7-MuiPaper-root-MuiCard-root {
 
+  max-width: 100%;
+}
 @media (prefers-reduced-motion: no-preference) {
   .App-logo {
     animation: App-logo-spin infinite 20s linear;
