@@ -29,9 +29,19 @@
     border-radius: 5px;
 }
 .submit-btn{
-    width:400px;
+    width:390px;
     height: 43px;
+    margin-top: 5px;
+}
+.signup-btn{
+    width:390px;
+    height: 43px;
+    margin: 5px; 
 }
 h1{
     font-family: cursive;
+}
+.field{
+    display: flex;
+    flex-direction: column;
 }

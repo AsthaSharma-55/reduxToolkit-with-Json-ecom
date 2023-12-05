@@ -1,3 +1,8 @@
 .head{
     padding: 10px;
 }
+.search{
+    position: absolute;
+    margin-left: 178px;
+    margin-top: 2px;
+}

@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
-import { useParams,useNavigate } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { getProductdata, productInCart, updateProductInCart ,productdata} from '../Redux/Slice/LoginSlice';
+import { getProductdata, productInCart, updateProductInCart, productdata,UpdatedproductInCart,getProductInCart } from '../Redux/Slice/LoginSlice';
 import './Styles/Description.css';
 import Rating from '@mui/material/Rating';
 import Button from 'react-bootstrap/Button';
@@ -12,31 +12,34 @@ import { increment, selectCount } from '../Redux/Slice/LoginSlice';
 function DescriptionPage() {
   const params = useParams();
   const dispatch = useDispatch();
-  const navigate=useNavigate()
+  const navigate = useNavigate()
   const { id } = params;
-  const count = useSelector(selectCount);
+  let count = useSelector(selectCount);
   const { getproductdataById } = useSelector((state) => state.Loginreducer);
   // console.log("id", id);
-  // console.log("count", count);
-   let quantity=0
+  console.log("count", count);
 
-   const handlecart = ( id) => {
-if(getproductdataById.quantity && getproductdataById.quantity>0){
-  console.log(" ")
-  dispatch(increment());
-  const dataWithQuantity = { ...getproductdataById, quantity: getproductdataById.quantity + 1 };
-  dispatch(updateProductInCart({ body: dataWithQuantity, id }));
-  dispatch(productdata())
-  navigate('/home');
-  console.log("coming outside");
-}else{
-  console.log("hfhfhfhgf")
-  dispatch(increment());
-  const dataWithQuantity = { ...getproductdataById, quantity: count + 1 };
-  dispatch(updateProductInCart({ body: dataWithQuantity, id }));
-  navigate('/home');
-  console.log("coming outside");
-}  
+  const handlecart = (id) => {
+    if (getproductdataById.quantity && getproductdataById.quantity > 0) {
+      console.log(" inside")
+      dispatch(increment());
+      const dataWithQuantity = { ...getproductdataById, quantity: getproductdataById.quantity + 1 };
+      dispatch(updateProductInCart({ body: dataWithQuantity, id }));
+      dispatch(UpdatedproductInCart({ body: dataWithQuantity, id }))
+      dispatch(getProductInCart())
+      dispatch(productdata())
+      navigate('/home');
+      console.log("coming inside if");
+    } else {
+      console.log("hfhfhfhgf")
+      count=0
+      dispatch(increment());
+      const dataWithQuantity = { ...getproductdataById, quantity: count + 1 };
+      dispatch(updateProductInCart({ body: dataWithQuantity, id }));
+      dispatch(productInCart(dataWithQuantity))
+      navigate('/home');
+      console.log("coming outside if else");
+    }
   };
 
   // useEffect(() => {
@@ -76,7 +79,7 @@ if(getproductdataById.quantity && getproductdataById.quantity>0){
             <span className='detail-cat'> Description: </span>
             {getproductdataById.description}
           </p>
-          <Button variant="warning" className='cart' onClick={(e)=>handlecart(getproductdataById.id)}>Add to cart</Button>
+          <Button variant="warning" className='cart' onClick={(e) => handlecart(getproductdataById.id)}>Add to cart</Button>
           <Link to={'/home'}><Button variant="secondary" className='cart'> Back </Button></Link>
         </div>
       </div>

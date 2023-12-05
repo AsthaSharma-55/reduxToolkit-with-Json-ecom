@@ -50,7 +50,7 @@ margin: 10px;
 }
 .final-amount{
     display: flex;
-    justify-content: space-between;
-    width: 668px;
-    margin-left: 167px;
+    justify-content: center;
+    /* width: 668px; */
+    /* margin-left: 167px; */
 }

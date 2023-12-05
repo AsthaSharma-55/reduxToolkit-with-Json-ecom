@@ -1,48 +1,77 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
+import { Formik, Field, Form, ErrorMessage } from 'formik';
+import * as Yup from 'yup';
 import { useDispatch, useSelector } from 'react-redux';
-import { signup, } from '../Redux/Slice/LoginSlice';
-import { json, useNavigate } from 'react-router-dom';
-import './Styles/Login.css'
+import { signIn } from '../Redux/Slice/LoginSlice';
+import { useNavigate } from 'react-router-dom';
+import './Styles/Login.css';
 import Button from '@mui/material/Button';
+import { Link } from 'react-router-dom';
 
 function Login() {
-
   const dispatch = useDispatch();
-  const navigate = useNavigate()
-  const [values, setValue] = useState({
-    email: '',
-    password: ''
+  const navigate = useNavigate();
+  const { SignInData } = useSelector((state) => state.Loginreducer);
+console.log("SignInData",SignInData)
+  // Validation schema using Yup
+  const validationSchema = Yup.object().shape({
+    email: Yup.string().email('Invalid email').required('Required'),
+    password: Yup.string().required('Required'),
   });
 
-  // const logindaata = useSelector((state) => state.Loginreducer.getlogindata); // Corrected name
-  // const somthing=dispatch(logindata)
-
-  // console.log('logindaata', logindaata);
-
-  const handleLogin = () => {
-    localStorage.setItem('user',JSON.stringify(values))
-    dispatch(signup(values));
-    navigate('/home')
+  // Initial form values
+  const initialValues = {
+    email: '',
+    password: '',
   };
 
-  const handleChange = (e) => {
-    e.preventDefault()
-    setValue({
-      ...values,
-      [e.target.name]: e.target.value
-    });
+  // Submit function
+  const handleLogin = (values) => {
+    const { email, password } = values;
+    const userExists = SignInData.some(user => user.email === email && user.password === password);
+    console.log("userExists",userExists)
+    if (userExists) {
+      localStorage.setItem('user', JSON.stringify(values));
+      navigate('/home');
+    } else {
+      alert('User not found or credentials are incorrect');
+    }
   };
 
+  useEffect(()=>{
+    dispatch(signIn())
+  },[])
 
   return (
-    <div className='main'>
-      <div className='Login-form-div'>
+    <div className="main">
+      <div className="Login-form-div">
         <h1>Login</h1>
-        <form onSubmit={(e) => handleLogin()} className='Login-form'>
-          <input placeholder='email' type='text' name='email' className='form-input' value={values.email} onChange={handleChange} required/>
-          <input placeholder='password' type='password' name='password' className='form-input' value={values.password} onChange={handleChange} required />
-          <Button type='submit' className='submit-btn' variant="contained" >Login</Button>
-        </form>
+        <Formik initialValues={initialValues} validationSchema={validationSchema} onSubmit={handleLogin}>
+          <Form className="Login-form">
+            <div className='field'>
+              <label htmlFor="email">Email</label>
+              <Field type="text" id="email" name="email" className="form-input" />
+              <ErrorMessage name="email" component="div" style={{color:"red"}} />
+            </div>
+
+            <div className='field'>
+              <label htmlFor="password">Password</label>
+              <Field type="password" id="password" name="password" className="form-input" />
+              <ErrorMessage name="password" component="div" style={{color:"red"}} />
+            </div>
+
+            <div className='field'>
+              <Button type="submit" className="submit-btn" variant="contained">
+                Login
+              </Button>
+              <Link to={'/register'}>
+                <Button type="submit" className="signup-btn" variant="outlined" style={{marginTop:"5px"}}>
+                  SignUp
+                </Button>
+              </Link>
+            </div>
+          </Form>
+        </Formik>
       </div>
     </div>
   );

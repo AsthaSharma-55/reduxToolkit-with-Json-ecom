@@ -16,6 +16,19 @@ export const signup = createAsyncThunk(
     }
   }
 );
+export const signIn = createAsyncThunk(
+  "signIn",  // Use a distinct action type
+  async (_, { rejectWithValue }) => {
+    try {
+      const response = await axios.get(
+        `http://localhost:5000/signup`,       
+      );
+      return response.data;
+    } catch (err) {
+      return rejectWithValue(err);
+    }
+  }
+);
 
 export const productdata = createAsyncThunk(
   "logindata",
@@ -24,7 +37,7 @@ export const productdata = createAsyncThunk(
     try {
       const response = await axios.get(
         `http://localhost:5000/products`,  // Adjust the endpoint
-      );   
+      );
       return response.data;
     } catch (err) {
       return rejectWithValue(err.response.data);
@@ -38,7 +51,7 @@ export const getProductdata = createAsyncThunk(
     try {
       const response = await axios.get(
         `http://localhost:5000/products/${id}`,  // Adjust the endpoint
-      );   
+      );
       return response.data;
     } catch (err) {
       return rejectWithValue(err.response.data);
@@ -49,12 +62,27 @@ export const getProductdata = createAsyncThunk(
 export const productInCart = createAsyncThunk(
   "productInCart",
   async (body, { rejectWithValue }) => {
-    // console.log("productInCart",body)
+    console.log("productInCart",body)
     try {
       const response = await axios.post(
-        `http://localhost:5000/cardData`, 
-        body 
-      );   
+        `http://localhost:5000/cardData`,
+        body
+      );
+      return response.data;
+    } catch (err) {
+      return rejectWithValue(err.response.data);
+    }
+  }
+);
+export const UpdatedproductInCart = createAsyncThunk(
+  "UpdatedproductInCart",
+  async ({ body, id }, { rejectWithValue }) => {
+    console.log("UpdatedproductInCart", body, "id", id);
+    try {
+      const response = await axios.put(
+        `http://localhost:5000/cardData/${id}`,
+        body
+      );
       return response.data;
     } catch (err) {
       return rejectWithValue(err.response.data);
@@ -66,19 +94,34 @@ export const getProductInCart = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       const response = await axios.get(
-        `http://localhost:5000/cardData`, 
-         
-      );   
+        `http://localhost:5000/cardData`,
+
+      );
       return response.data;
     } catch (err) {
       return rejectWithValue(err.response.data);
     }
   }
 );
+export const removeProductInCart = createAsyncThunk(
+  "removeProductInCart",
+  async (id, { rejectWithValue }) => {
+    try {
+      const response = await axios.delete(
+        `http://localhost:5000/cardData/${id}`,
+
+      );
+      return response.data;
+    } catch (err) {
+      return rejectWithValue(err.response.data);
+    }
+  }
+);
+
 export const updateProductInCart = createAsyncThunk(
   "updateProductInCart",
   async ({ body, id }, { rejectWithValue }) => {
-    console.log("updateProductInCart", body,"id",id);
+    console.log("updateProductInCart", body, "id", id);
     try {
       const response = await axios.put(
         `http://localhost:5000/products/${id}`,
@@ -91,16 +134,19 @@ export const updateProductInCart = createAsyncThunk(
   }
 );
 
+
 export const LoginSlice = createSlice({
   name: "slice",
   initialState: {
     loginreducer: [],
-    getproductdata: [], 
-    getproductdataById:[],
-    cardProductData:[],
-    getcartItem:[],
-    updateproduct:[],
-    value:0,
+    SignInData:[],
+    getproductdata: [],
+    getproductdataById: [],
+    cardProductData: [],
+    getcartItem: [],
+    updateproduct: [],
+    // UpdatedCartProduct:[],
+    value: 0,
     loading: false,
   },
   reducers: {
@@ -128,6 +174,17 @@ export const LoginSlice = createSlice({
         state.loginreducer = action.payload;
       })
       .addCase(signup.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message;
+      })
+      .addCase(signIn.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(signIn.fulfilled, (state, action) => {
+        state.loading = false;
+        state.SignInData = action.payload;
+      })
+      .addCase(signIn.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message;
       })
@@ -169,10 +226,23 @@ export const LoginSlice = createSlice({
         state.loading = true;
       })
       .addCase(getProductInCart.fulfilled, (state, action) => {
+        console.log("getProductInCart",action.payload)
         state.loading = false;
         state.getcartItem = action.payload;
       })
       .addCase(getProductInCart.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message;
+      })
+      .addCase(removeProductInCart.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(removeProductInCart.fulfilled, (state, action) => {
+        console.log("getProductInCart",action.payload)
+        state.loading = false;
+        state.getcartItem = state.getcartItem.filter(item => item.id !== action.payload.id)
+      })
+      .addCase(removeProductInCart.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message;
       })
@@ -181,12 +251,20 @@ export const LoginSlice = createSlice({
       })
       .addCase(updateProductInCart.fulfilled, (state, action) => {
         state.loading = false;
-        // console.log("action.payload", action.payload);
-        // console.log("state.getproductdata", state.getproductdata);
-        // Assuming action.payload is the updated item
-        state.getProductdata = state.getproductdata.map(item => (item.id === action.payload.id ? action.payload : item));
-    })
+        state.getproductdata = state.getproductdata.map(item => (item.id === action.payload.id ? action.payload : item));
+      })
       .addCase(updateProductInCart.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message;
+      })
+      .addCase(UpdatedproductInCart.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(UpdatedproductInCart.fulfilled, (state, action) => {
+        state.loading = false;
+        state.getcartItem = state.getcartItem.map(item => (item.id === action.payload.id ? action.payload : item));
+      })
+      .addCase(UpdatedproductInCart.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message;
       });

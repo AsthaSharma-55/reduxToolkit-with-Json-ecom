@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import Button from 'react-bootstrap/Button';
 import Container from 'react-bootstrap/Container';
 import Form from 'react-bootstrap/Form';
@@ -10,19 +10,36 @@ import './Styles/Navbar.css'
 import { Link, useNavigate } from 'react-router-dom';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import { useDispatch, useSelector } from 'react-redux'
-import { increment,selectCount } from '../Redux/Slice/LoginSlice'
+import { increment, selectCount, getProductInCart } from '../Redux/Slice/LoginSlice'
+
 
 function Naavbar() {
     const name = localStorage.getItem('user')
     const UserName = JSON.parse(name)
     const count = useSelector(selectCount);
+    const dispatch = useDispatch()
+    const { getcartItem } = useSelector((state) => state.Loginreducer)
     const navigate = useNavigate()
-  
+    // const[search,setSearch]=useState('')
+    // console.log("productData==============>", productItemData)
+
+    console.log("getcartItem", getcartItem.length)
 
     const handleLogout = () => {
         localStorage.clear();
         navigate('/')
     }
+
+    // const handleSearch=(event)=>{
+    //     const matchedUsers = productItemData.filter((user) => {
+    // 		return `${user.category}`
+    // 			.toLowerCase()
+    // 			.includes(event.target.value.toLowerCase());
+    // 	});
+
+    // 	setProductData(matchedUsers);
+    // 	setSearch(event.target.value);
+    // }
 
     return (
         <div>
@@ -57,18 +74,13 @@ function Naavbar() {
                     </NavDropdown.Item> */}
                                 </NavDropdown>
                             </Nav>
-                            <Form className="d-flex">
-                                <Form.Control
-                                    type="search"
-                                    placeholder="Search"
-                                    className="me-2"
-                                    aria-label="Search"
-                                />
-                                <Button variant="outline-success">Search</Button>
-                            </Form>
+
                             <div className='shop-div'>
                                 <Link to={'/cart'} style={{ color: "black" }}>
-                                    <p className='shop-icon-num'>{count}</p>
+                                    <p className='shop-icon-num'>
+                                        {/* {count} */}
+                                        {getcartItem.length < 0 ? 0 : getcartItem.length}
+                                    </p>
                                     <ShoppingCartIcon style={{ height: "50px", marginLeft: "19px" }} />
                                 </Link>
                             </div>
@@ -76,8 +88,6 @@ function Naavbar() {
                     </Navbar.Offcanvas>
                 </Container>
             </Navbar>
-
-
         </div>
     )
 }
