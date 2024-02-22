@@ -12,18 +12,17 @@ import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import { useDispatch, useSelector } from 'react-redux'
 import { increment, selectCount, getProductInCart } from '../Redux/Slice/LoginSlice'
 
-
 function Naavbar() {
-    const name = localStorage.getItem('user')
-    const UserName = JSON.parse(name)
+    let name = localStorage.getItem('user')
+    let UserName = JSON.parse(name)
     const count = useSelector(selectCount);
     const dispatch = useDispatch()
     const { getcartItem } = useSelector((state) => state.Loginreducer)
     const navigate = useNavigate()
     // const[search,setSearch]=useState('')
-    // console.log("productData==============>", productItemData)
+    console.log("UserName==============>", UserName)
 
-    console.log("getcartItem", getcartItem.length)
+    console.log("getcartItem", getcartItem)
 
     const handleLogout = () => {
         localStorage.clear();
@@ -32,7 +31,7 @@ function Naavbar() {
 
     // const handleSearch=(event)=>{
     //     const matchedUsers = productItemData.filter((user) => {
-    // 		return `${user.category}`
+    // 		return `${user.category}` 
     // 			.toLowerCase()
     // 			.includes(event.target.value.toLowerCase());
     // 	});
@@ -40,6 +39,9 @@ function Naavbar() {
     // 	setProductData(matchedUsers);
     // 	setSearch(event.target.value);
     // }
+    useEffect(() => {
+        dispatch(getProductInCart())
+    }, []) 
 
     return (
         <div>
@@ -61,7 +63,7 @@ function Naavbar() {
                             <Nav className="justify-content-end flex-grow-1 pe-3">
                                 <Nav.Link href="/home">Home</Nav.Link>
                                 <NavDropdown
-                                    title={UserName.email}
+                                    title={UserName.user.email}
                                     id={`offcanvasNavbarDropdown-expand`}
                                 >
                                     <NavDropdown.Item onClick={handleLogout}>logout</NavDropdown.Item>

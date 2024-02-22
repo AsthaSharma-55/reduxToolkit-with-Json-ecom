@@ -7,7 +7,6 @@ import Cart from './Components/Cart';
 import Register from './Components/Register';
 import { PaymentProvider } from "./Components/paymentContext.js";
 
-
 function App() {
   return (
     <div>

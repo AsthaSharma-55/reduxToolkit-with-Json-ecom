@@ -11,19 +11,22 @@ import { increment, selectCount } from '../Redux/Slice/LoginSlice';
 
 function DescriptionPage() {
   const params = useParams();
+  console.log("params",params)
   const dispatch = useDispatch();
   const navigate = useNavigate()
   const { id } = params;
   let count = useSelector(selectCount);
   const { getproductdataById } = useSelector((state) => state.Loginreducer);
   // console.log("id", id);
-  console.log("count", count);
+  console.log("count", getproductdataById);
 
   const handlecart = (id) => {
+    console.log(" inside if ",id)
     if (getproductdataById.quantity && getproductdataById.quantity > 0) {
-      console.log(" inside")
+      console.log(" inside if ")
       dispatch(increment());
       const dataWithQuantity = { ...getproductdataById, quantity: getproductdataById.quantity + 1 };
+      console.log("dataWithQuantity===========================>",dataWithQuantity);
       dispatch(updateProductInCart({ body: dataWithQuantity, id }));
       dispatch(UpdatedproductInCart({ body: dataWithQuantity, id }))
       dispatch(getProductInCart())
@@ -31,14 +34,14 @@ function DescriptionPage() {
       navigate('/home');
       console.log("coming inside if");
     } else {
-      console.log("hfhfhfhgf")
+      console.log("come inside else")
       count=0
       dispatch(increment());
       const dataWithQuantity = { ...getproductdataById, quantity: count + 1 };
       dispatch(updateProductInCart({ body: dataWithQuantity, id }));
       dispatch(productInCart(dataWithQuantity))
       navigate('/home');
-      console.log("coming outside if else");
+      console.log("dataWithQuantity",getproductdataById._id,dataWithQuantity._id,id);
     }
   };
 
@@ -79,7 +82,7 @@ function DescriptionPage() {
             <span className='detail-cat'> Description: </span>
             {getproductdataById.description}
           </p>
-          <Button variant="warning" className='cart' onClick={(e) => handlecart(getproductdataById.id)}>Add to cart</Button>
+          <Button variant="warning" className='cart' onClick={(e) => handlecart(getproductdataById._id)}>Add to cart</Button>
           <Link to={'/home'}><Button variant="secondary" className='cart'> Back </Button></Link>
         </div>
       </div>

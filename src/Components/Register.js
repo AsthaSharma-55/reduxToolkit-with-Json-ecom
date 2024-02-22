@@ -7,6 +7,7 @@ import { useNavigate } from 'react-router-dom';
 import './Styles/Login.css';
 import Button from '@mui/material/Button';
 import { Link } from 'react-router-dom';
+import axios from 'axios';
 
 function Register() {
     const dispatch = useDispatch();
@@ -17,12 +18,6 @@ function Register() {
         name: Yup.string().required('Name is required'),
         email: Yup.string().required("Email is a required field").email("Invalid email format"),
         password: Yup.string().required('Password is required')
-        //     .matches(/[a-z]+/, "One lowercase character")
-        //     .matches(/[A-Z]+/, "One uppercase character")
-        //     .matches(/[@$!%*#?&]+/, "One special character")
-        //     .matches(/\d+/, "One number")
-        //     .min(8, "Must be 8 characters or more"),
-        // confirm_password: Yup.string().oneOf([Yup.ref('password'), ''], 'Password must match').required('Confirm password is required')
     });
 
     // Initial form values
@@ -38,6 +33,31 @@ function Register() {
         dispatch(signup(values));
         navigate('/home');
     };
+
+    // const handleSignUp = async (values) => {
+    //     console.log(values)
+    //     try {
+    //       const response = await axios.post('http://localhost:5000/register', values, {
+    //         headers: {
+    //           'Content-Type': 'application/json',
+    //         },
+    //       });
+      
+    //       // Handle the response as needed
+    //       console.log('Sign-up successful:', response.data);
+      
+    //       // You may choose to store the user data in local storage or dispatch an action
+    //       // localStorage.setItem('user', JSON.stringify(response.data));
+    //       // dispatch(signupSuccess(response.data));
+      
+    //       // Redirect to the home page or perform any other necessary actions
+    //     //   navigate('/home');
+    //     } catch (error) {
+    //       console.error('Error signing up:', error);
+      
+    //       // Handle the error, show a message, etc.
+    //     }
+    //   };
 
     return (
         <div className="main">

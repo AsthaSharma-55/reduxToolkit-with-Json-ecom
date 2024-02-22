@@ -1,7 +1,7 @@
 import React, { useEffect, useCallback, useState } from 'react'
 // import { useParams } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
-import { getProductInCart ,removeProductInCart,updateProductInCart} from '../Redux/Slice/LoginSlice'
+import { getProductInCart, removeProductInCart, updateProductInCart,UpdatedproductInCart } from '../Redux/Slice/LoginSlice'
 import './Styles/Cart.css'
 // import Rating from '@mui/material/Rating';
 import Button from 'react-bootstrap/Button';
@@ -16,7 +16,10 @@ function Cart() {
     const { getcartItem } = useSelector((state) => state.Loginreducer)
 
     console.log("getcartItem", getcartItem)
-    const calculateTotal = getcartItem.map((item) => { return item.quantity * item.price })
+    const calculateTotal = Array.isArray(getcartItem) && getcartItem.length > 0
+    ? getcartItem.map((item) => item.quantity * item.price)
+    : [];
+
     console.log(calculateTotal)
     const overallTotal = calculateTotal.reduce((acc, total) => acc + total, 0);
     const Razorpay = useRazorpay();
@@ -52,19 +55,25 @@ function Cart() {
         rzp.open();
     };
 
-    const handleRemoveItem=(item,id)=>{
-        console.log("item id",id,item)
-        let newObj = Object.keys(item)
-        .filter(key => key !== "quantity")
-        .reduce((acc, key) => {
-            acc[key] = item[key];
-            return acc;
-        }, {});
-       
-        // console.log(newObj)
-        dispatch(updateProductInCart({ body: newObj, id }));
+    const handleRemoveItem = (item, id) => {
+        console.log("item id", id, item)
+        // let newObj = Object.keys(item)
+        //     .filter(key => key !== "quantity")
+        //     .reduce((acc, key) => {
+        //         acc[key] = item[key];
+        //         return acc;
+        //     }, {});
+            let newObj = {
+                ...item,  // Copy all properties from the original item
+                quantity: 0  // Set quantity to 0
+            };
+
+        console.log("newObj",newObj,item,id)
         dispatch(removeProductInCart(id))
+        dispatch(updateProductInCart({ body: newObj, id }));
+        // dispatch(UpdatedproductInCart({ body: newObj, id }));
         dispatch(getProductInCart())
+        console.log("chla")
         toast.success("remove Item successfully")
     }
 
@@ -77,10 +86,10 @@ function Cart() {
             <div>
                 <Naavbar />
                 {/* <div>DescriptionPage</div> */}
-                <Link to={'/home'}><Button variant="secondary" className='cart'> Back </Button></Link> 
+                <Link to={'/home'}><Button variant="secondary" className='cart'> Back </Button></Link>
                 <div style={{ display: "flex", flexDirection: "row" }}>
                     <div>
-                        {getcartItem.map((item, index) => (
+                        {Array.isArray(getcartItem) && getcartItem.length>0 ? getcartItem.map((item, index) => (
                             <div className='cart-div' key={item.id}>
                                 <div className='cart-img'>
                                     <img src={item.image} height={"100px"} width={"100px"} />
@@ -96,7 +105,7 @@ function Cart() {
                                     </div>
                                     <hr></hr>
 
-                                    <div style={{ display: "flex",justifyContent: "space-between" }}>
+                                    <div style={{ display: "flex", justifyContent: "space-between" }}>
                                         <div>
                                             <h4 className='cart-product'>Product Details: </h4>
                                             <p >
@@ -104,11 +113,11 @@ function Cart() {
                                                 {item.category}
                                             </p>
                                         </div>
-                                        <Button 
-                                        type="button" 
-                                        variant="danger" 
-                                        style={{height: "43px", width: "100px"}}
-                                        onClick={(e)=>handleRemoveItem(item,item.id)}
+                                        <Button
+                                            type="button"
+                                            variant="danger"
+                                            style={{ height: "43px", width: "100px" }}
+                                            onClick={(e) => handleRemoveItem(item, item._id)}
                                         >
                                             Remove
                                         </Button>
@@ -119,12 +128,12 @@ function Cart() {
                                     <hr></hr>
                                     <div className='cart-total'>
                                         <div> Total</div>
-                                        <div> {item.price * item.quantity}</div>
+                                        <div> {item.price * item.quantity}</div> 
                                     </div>
 
                                 </div>
                             </div>
-                        ))}
+                        )):<div> <h1 style={{width:"590px"}}>Cart is empty</h1></div>}
                     </div>
 
                     <div style={{ display: "flex", flexDirection: "column", width: "100%" }}>
@@ -133,8 +142,14 @@ function Cart() {
                             <h5>Rs {overallTotal}</h5>
                         </div>
                         <div style={{ display: "flex", justifyContent: "center", }}>
-                            <Button onClick={handlePayment} type="button" class="btn btn-warning" style={{ width: "300px", backgroundColor: "orange", borderColor: "orange" }}>Proceed to Buy</Button>
-
+                            <Button
+                                onClick={handlePayment}
+                                type="button"
+                                class="btn btn-warning"
+                                style={{ width: "300px", backgroundColor: "orange", borderColor: "orange" }}
+                            >
+                                Proceed to Buy
+                            </Button>
                         </div>
                     </div>
                 </div>

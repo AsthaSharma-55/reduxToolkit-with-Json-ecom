@@ -1,29 +1,50 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
+
+// let bearer_token = localStorage.getItem('user')
+// let token = JSON.parse(bearer_token)
+// console.log("1234567890====================>", token.auth)
 
 export const signup = createAsyncThunk(
-  "signup",  // Use a distinct action type
+  'signup', // Use a distinct action type
   async (body, { rejectWithValue }) => {
-    // console.log("nbxjdx", body);
+    console.log('nbxjdx', body);
     try {
       const response = await axios.post(
-        `http://localhost:5000/signup`,
-        body,
+        'http://localhost:5000/register',
+        body, // Correctly pass the data as the second argument
+        {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        }
       );
-      return response;
+      return response.data; // Assuming you want to return the data from the response
     } catch (err) {
-      return rejectWithValue(err);
+      return rejectWithValue(err.response.data); // Return the error response data
     }
   }
 );
+
 export const signIn = createAsyncThunk(
   "signIn",  // Use a distinct action type
-  async (_, { rejectWithValue }) => {
+  async (values, { rejectWithValue }) => {
     try {
-      const response = await axios.get(
-        `http://localhost:5000/signup`,       
+      const response = await axios.post(
+        `http://localhost:5000/login`,
+        values
       );
-      return response.data;
+      console.log(response.data)
+      let result = response.data;
+
+      if (result.auth) {
+        console.log({ result })
+        localStorage.setItem('user', JSON.stringify(result));
+      } else {
+        alert('User not found or credentials are incorrect');
+      }
+      return response.data
     } catch (err) {
       return rejectWithValue(err);
     }
@@ -34,9 +55,16 @@ export const productdata = createAsyncThunk(
   "logindata",
   async (_, { rejectWithValue }) => {
     console.log("productdata updated",)
+    let bearer_token = localStorage.getItem('user')
+    let token = JSON.parse(bearer_token)
     try {
       const response = await axios.get(
-        `http://localhost:5000/products`,  // Adjust the endpoint
+        `http://localhost:5000/products`,
+      //    {
+      //   headers: {
+      //     authorization: `bearer ${token.auth} `
+      //   }
+      // }  // Adjust the endpoint
       );
       return response.data;
     } catch (err) {
@@ -48,9 +76,12 @@ export const productdata = createAsyncThunk(
 export const getProductdata = createAsyncThunk(
   "getProductData",
   async (id, { rejectWithValue }) => {
+    console.log("id===================", id)
+    let bearer_token = localStorage.getItem('user')
+    let token = JSON.parse(bearer_token)
     try {
       const response = await axios.get(
-        `http://localhost:5000/products/${id}`,  // Adjust the endpoint
+        `http://localhost:5000/products/${id}`, 
       );
       return response.data;
     } catch (err) {
@@ -62,11 +93,18 @@ export const getProductdata = createAsyncThunk(
 export const productInCart = createAsyncThunk(
   "productInCart",
   async (body, { rejectWithValue }) => {
-    console.log("productInCart",body)
+    console.log("productInCart", body)
+    let bearer_token = localStorage.getItem('user')
+    let token = JSON.parse(bearer_token)
     try {
       const response = await axios.post(
-        `http://localhost:5000/cardData`,
-        body
+        `http://localhost:5000/cartdata`, 
+        body,
+        // headers: {
+        //   authorization: `bearer ${token.auth} `
+
+        // }
+     
       );
       return response.data;
     } catch (err) {
@@ -74,14 +112,21 @@ export const productInCart = createAsyncThunk(
     }
   }
 );
+
 export const UpdatedproductInCart = createAsyncThunk(
   "UpdatedproductInCart",
   async ({ body, id }, { rejectWithValue }) => {
-    console.log("UpdatedproductInCart", body, "id", id);
+    console.log("UpdatedproductInCart hogya update", body, "id", id);
+    let bearer_token = localStorage.getItem('user')
+    let token = JSON.parse(bearer_token)
     try {
       const response = await axios.put(
-        `http://localhost:5000/cardData/${id}`,
-        body
+        `http://localhost:5000/cartdata/${id}`, 
+        body,
+        // headers: {
+        //   authorization: `bearer ${token.auth}`
+        // }
+      
       );
       return response.data;
     } catch (err) {
@@ -89,13 +134,18 @@ export const UpdatedproductInCart = createAsyncThunk(
     }
   }
 );
+
 export const getProductInCart = createAsyncThunk(
   "getProductInCart",
   async (_, { rejectWithValue }) => {
+    console.log("chl gya cart data")
+    let bearer_token = localStorage.getItem('user')
+    let token = JSON.parse(bearer_token)
+    console.log("getProductInCart token",token)
     try {
       const response = await axios.get(
-        `http://localhost:5000/cardData`,
-
+        `http://localhost:5000/cartdata`, 
+      
       );
       return response.data;
     } catch (err) {
@@ -106,9 +156,13 @@ export const getProductInCart = createAsyncThunk(
 export const removeProductInCart = createAsyncThunk(
   "removeProductInCart",
   async (id, { rejectWithValue }) => {
+    console.log("chlgyaa remove vala")
+    console.log("removeProductInCart", id)
+    let bearer_token = localStorage.getItem('user')
+    let token = JSON.parse(bearer_token)
     try {
       const response = await axios.delete(
-        `http://localhost:5000/cardData/${id}`,
+        `http://localhost:5000/cartdata/${id}`, 
 
       );
       return response.data;
@@ -122,10 +176,15 @@ export const updateProductInCart = createAsyncThunk(
   "updateProductInCart",
   async ({ body, id }, { rejectWithValue }) => {
     console.log("updateProductInCart", body, "id", id);
+    let bearer_token = localStorage.getItem('user')
+    let token = JSON.parse(bearer_token)
     try {
       const response = await axios.put(
-        `http://localhost:5000/products/${id}`,
-        body
+        `http://localhost:5000/products/${id}`, 
+        body,
+        // headers: {
+        //   authorization: `bearer ${token.auth} `
+        // }
       );
       return response.data;
     } catch (err) {
@@ -134,12 +193,11 @@ export const updateProductInCart = createAsyncThunk(
   }
 );
 
-
 export const LoginSlice = createSlice({
   name: "slice",
   initialState: {
     loginreducer: [],
-    SignInData:[],
+    SignInData: [],
     getproductdata: [],
     getproductdataById: [],
     cardProductData: [],
@@ -226,7 +284,7 @@ export const LoginSlice = createSlice({
         state.loading = true;
       })
       .addCase(getProductInCart.fulfilled, (state, action) => {
-        console.log("getProductInCart",action.payload)
+        console.log("getProductInCart", action.payload)
         state.loading = false;
         state.getcartItem = action.payload;
       })
@@ -238,10 +296,11 @@ export const LoginSlice = createSlice({
         state.loading = true;
       })
       .addCase(removeProductInCart.fulfilled, (state, action) => {
-        console.log("getProductInCart",action.payload)
+        console.log("removeProductInCart============", action.payload)
         state.loading = false;
-        state.getcartItem = state.getcartItem.filter(item => item.id !== action.payload.id)
+        state.getcartItem = state.getcartItem.filter(item => item._id !== action.payload.id);
       })
+
       .addCase(removeProductInCart.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message;
@@ -262,7 +321,11 @@ export const LoginSlice = createSlice({
       })
       .addCase(UpdatedproductInCart.fulfilled, (state, action) => {
         state.loading = false;
+
+        // Check if state.getcartItem is an array before using map
+        // if (Array.isArray(state.getcartItem)) {
         state.getcartItem = state.getcartItem.map(item => (item.id === action.payload.id ? action.payload : item));
+        // }
       })
       .addCase(UpdatedproductInCart.rejected, (state, action) => {
         state.loading = false;

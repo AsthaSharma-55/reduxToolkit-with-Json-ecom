@@ -12,7 +12,7 @@ function Login() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { SignInData } = useSelector((state) => state.Loginreducer);
-console.log("SignInData",SignInData)
+  console.log("SignInData", SignInData)
   // Validation schema using Yup
   const validationSchema = Yup.object().shape({
     email: Yup.string().email('Invalid email').required('Required'),
@@ -26,21 +26,17 @@ console.log("SignInData",SignInData)
   };
 
   // Submit function
-  const handleLogin = (values) => {
-    const { email, password } = values;
-    const userExists = SignInData.some(user => user.email === email && user.password === password);
-    console.log("userExists",userExists)
-    if (userExists) {
-      localStorage.setItem('user', JSON.stringify(values));
-      navigate('/home');
-    } else {
-      alert('User not found or credentials are incorrect');
-    }
+  const handleLogin =  (values) => {
+     dispatch(signIn(values)); 
   };
-
-  useEffect(()=>{
-    dispatch(signIn())
-  },[])
+  
+  useEffect(() => {
+    // Check for changes in SignInData
+    if (SignInData?.user) {
+      navigate('/home');
+    }
+  }, [SignInData, navigate]);
+  
 
   return (
     <div className="main">
@@ -51,13 +47,13 @@ console.log("SignInData",SignInData)
             <div className='field'>
               <label htmlFor="email">Email</label>
               <Field type="text" id="email" name="email" className="form-input" />
-              <ErrorMessage name="email" component="div" style={{color:"red"}} />
+              <ErrorMessage name="email" component="div" style={{ color: "red" }} />
             </div>
 
             <div className='field'>
               <label htmlFor="password">Password</label>
               <Field type="password" id="password" name="password" className="form-input" />
-              <ErrorMessage name="password" component="div" style={{color:"red"}} />
+              <ErrorMessage name="password" component="div" style={{ color: "red" }} />
             </div>
 
             <div className='field'>
@@ -65,7 +61,7 @@ console.log("SignInData",SignInData)
                 Login
               </Button>
               <Link to={'/register'}>
-                <Button type="submit" className="signup-btn" variant="outlined" style={{marginTop:"5px"}}>
+                <Button type="submit" className="signup-btn" variant="outlined" style={{ marginTop: "5px" }}>
                   SignUp
                 </Button>
               </Link>
