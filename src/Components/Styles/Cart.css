@@ -9,9 +9,7 @@
 
 .cart-div{
     display: flex;
-    flex-direction: row;
-    height: 240px;
-   
+    flex-direction: row;   
 }
 
 .cart-img{

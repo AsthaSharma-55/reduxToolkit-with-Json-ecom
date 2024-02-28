@@ -70,19 +70,19 @@ function Register() {
                     <Form className="Login-form">
                         <div className='field'>
                             <label htmlFor="name">Name</label>
-                            <Field type="text" id="name" name="name" className="form-input" />
+                            <Field type="text" id="name" name="name" className="form-input" placeholder="enter name" />
                             <ErrorMessage name="name" component="div" style={{ color: "red" }} />
                         </div>
 
                         <div className='field'>
                             <label htmlFor="email">Email</label>
-                            <Field type="text" id="email" name="email" className="form-input" />
+                            <Field type="text" id="email" name="email" className="form-input" placeholder="enter email" />
                             <ErrorMessage name="email" component="div" style={{ color: "red" }} />
                         </div>
 
                         <div className='field'>
                             <label htmlFor="password">Password</label>
-                            <Field type="password" id="password" name="password" className="form-input" />
+                            <Field type="password" id="password" name="password" className="form-input" placeholder="enter password" />
                             <ErrorMessage name="password" component="div" style={{ color: "red" }} />
                         </div>
 

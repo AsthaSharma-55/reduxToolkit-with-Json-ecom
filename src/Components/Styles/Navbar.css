@@ -5,14 +5,48 @@
 }
 .shop-icon-num{
     position: absolute;
-    margin-left: 31px;
+    margin-left: 14px;
     border: 2px solid black;
     border-radius: 50px;
     width: 25px;
     height: 25px;
     align-items: center;
     text-align: center;
+    margin-top: -10px;
 }
 .shop-div{
     margin-right: 20px;
+}
+
+
+.navbar{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    /* padding: 5px; */
+    background-color:  #ececec;
+}
+.nav-right{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    margin: 5px
+}
+.logout{
+    margin-right: 10px;
+    cursor: pointer;
+   font-size: 19px;
+    font-weight: 400;
+}
+.logout:hover{
+    color:blue
+}
+.home{
+    margin-right: 10px;
+    cursor: pointer;
+    font-size: 19px;
+    font-weight: 600;
+}
+.home:hover{
+    color:blue
 }

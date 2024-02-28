@@ -1,15 +1,10 @@
 import React, { useEffect, useState } from 'react'
-import Button from 'react-bootstrap/Button';
-import Container from 'react-bootstrap/Container';
-import Form from 'react-bootstrap/Form';
-import Nav from 'react-bootstrap/Nav';
-import Navbar from 'react-bootstrap/Navbar';
-import NavDropdown from 'react-bootstrap/NavDropdown';
-import Offcanvas from 'react-bootstrap/Offcanvas';
 import './Styles/Navbar.css'
 import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux'
 import { increment, selectCount, getProductInCart } from '../Redux/Slice/LoginSlice'
+import { FaShoppingCart } from "react-icons/fa";
+import { IoIosLogOut } from "react-icons/io";
 
 function Naavbar() {
     let name = localStorage.getItem('user')
@@ -29,67 +24,28 @@ function Naavbar() {
         navigate('/');
     }
 
-    // const handleSearch=(event)=>{
-    //     const matchedUsers = productItemData.filter((user) => {
-    // 		return `${user.category}` 
-    // 			.toLowerCase()
-    // 			.includes(event.target.value.toLowerCase());
-    // 	});
-
-    // 	setProductData(matchedUsers);
-    // 	setSearch(event.target.value);
-    // }
     useEffect(() => {
         dispatch(getProductInCart())
-    }, []) 
+    }, [])
 
     return (
         <div>
-            <Navbar className="bg-body-tertiary mb-3">
-                <Container fluid>
-                    <Navbar.Brand href="#" className='nav-brand'>Shopify</Navbar.Brand>
-                    <Navbar.Toggle aria-controls={`offcanvasNavbar-expand`} />
-                    <Navbar.Offcanvas
-                        id={`offcanvasNavbar-expand`}
-                        aria-labelledby={`offcanvasNavbarLabel-expand`}
-                        placement="end"
-                    >
-                        <Offcanvas.Header closeButton>
-                            <Offcanvas.Title id={`offcanvasNavbarLabel-expand`}>
-                                Offcanvas
-                            </Offcanvas.Title>
-                        </Offcanvas.Header>
-                        <Offcanvas.Body>
-                            <Nav className="justify-content-end flex-grow-1 pe-3">
-                                <Nav.Link href="/home">Home</Nav.Link>
-                                <NavDropdown
-                                    title={""}
-                                    id={`offcanvasNavbarDropdown-expand`}
-                                >
-                                    <NavDropdown.Item onClick={handleLogout}>logout</NavDropdown.Item>
-                                    {/* <NavDropdown.Item href="#action4">
-                     logout
-                    </NavDropdown.Item>
-                    <NavDropdown.Divider />
-                    <NavDropdown.Item href="#action5">
-                      Something else here
-                    </NavDropdown.Item> */}
-                                </NavDropdown>
-                            </Nav>
-
-                            <div className='shop-div'>
-                                <Link to={'/cart'} style={{ color: "black" }}>
-                                    <p className='shop-icon-num'>
-                                        {/* {count} */}
-                                        {getcartItem.length < 0 ? 0 : getcartItem.length}
-                                    </p>
-                                    <button>cart</button>
-                                </Link>
-                            </div>
-                        </Offcanvas.Body>
-                    </Navbar.Offcanvas>
-                </Container>
-            </Navbar>
+            <div className='navbar'>
+                <div className='nav-left'><h1>Shopify</h1></div>
+                <div className='nav-right'>
+                    <div className='home'>Home</div>
+                    <div className='logout' onClick={handleLogout}><IoIosLogOut style={{height: "30px",width: "27px"}}/>log out</div> 
+                    <div className='shop-div'>
+                        <Link to={'/cart'} style={{ color: "black" }}>
+                            <p className='shop-icon-num'>
+                                {/* {count} */}
+                                {getcartItem.length < 0 ? 0 : getcartItem.length}
+                            </p>
+                            <FaShoppingCart style={{ height: "34px", width: "23px" }} />
+                        </Link>
+                    </div>
+                </div>
+            </div>           
         </div>
     )
 }

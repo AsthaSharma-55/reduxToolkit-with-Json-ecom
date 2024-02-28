@@ -1,26 +1,27 @@
 import React, { useEffect, useCallback, useState } from 'react'
 // import { useParams } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
-import { getProductInCart, removeProductInCart, updateProductInCart,UpdatedproductInCart } from '../Redux/Slice/LoginSlice'
+import { getProductInCart, removeProductInCart, updateProductInCart, UpdatedproductInCart } from '../Redux/Slice/LoginSlice'
 import './Styles/Cart.css'
 // import Rating from '@mui/material/Rating';
 import Button from 'react-bootstrap/Button';
 import { Link } from 'react-router-dom'
 import Naavbar from './Navbar'
 import useRazorpay from "react-razorpay";
-import { ToastContainer, toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { FiLoader } from "react-icons/fi";
 
 function Cart() {
     const dispatch = useDispatch()
     const { getcartItem } = useSelector((state) => state.Loginreducer)
-
-    console.log("getcartItem", getcartItem)
+    const [loading, setloading] = useState(false)
+    // console.log("getcartItem", getcartItem)
     const calculateTotal = Array.isArray(getcartItem) && getcartItem.length > 0
-    ? getcartItem.map((item) => item.quantity * item.price)
-    : [];
+        ? getcartItem.map((item) => item.quantity * item.price)
+        : [];
 
-    console.log(calculateTotal)
+    // console.log(calculateTotal)
     const overallTotal = calculateTotal.reduce((acc, total) => acc + total, 0);
     const Razorpay = useRazorpay();
 
@@ -46,7 +47,7 @@ function Cart() {
             image: "https://example.com/your_logo",
 
             handler: (res) => {
-                console.log(res);
+                // console.log(res);
             }
         };
 
@@ -55,105 +56,127 @@ function Cart() {
         rzp.open();
     };
 
-    const handleRemoveItem = (item, id) => {
-        console.log("item id", id, item)
-        // let newObj = Object.keys(item)
-        //     .filter(key => key !== "quantity")
-        //     .reduce((acc, key) => {
-        //         acc[key] = item[key];
-        //         return acc;
-        //     }, {});
-            let newObj = {
-                ...item,  // Copy all properties from the original item
-                quantity: 0  // Set quantity to 0
-            };
-
-        console.log("newObj",newObj,item,id)
-        dispatch(removeProductInCart(id))
-        dispatch(updateProductInCart({ body: newObj, id }));
-        // dispatch(UpdatedproductInCart({ body: newObj, id }));
-        dispatch(getProductInCart())
-        console.log("chla")
-        toast.success("remove Item successfully")
-    }
+    const handleRemoveItem = async (item, id) => {
+        // console.log("item id", id, item);
+        setloading(true);
+        let newObj = {
+            ...item,  // Copy all properties from the original item
+            quantity: 0  // Set quantity to 0
+        };
+    
+        // console.log("newObj", newObj, item, id);
+        
+        // Assuming dispatch is defined somewhere in your code
+        await dispatch(removeProductInCart(id));
+        await dispatch(updateProductInCart({ body: newObj, id }));
+    
+        // Assuming getProductInCart is an async action dispatched with dispatch
+        const data = await dispatch(getProductInCart());     
+        
+        if (data.payload.status === 200) {
+            setloading(false);
+            
+        } else {
+            setloading(false);
+        }
+        
+        // console.log("chla");
+        toast.success("remove Item successfully"); 
+    };
+    
 
     useEffect(() => {
-        dispatch(getProductInCart())
-    }, [dispatch])
+
+        const fetchdata = async () => {
+            setloading(true)
+            const data = await dispatch(getProductInCart());
+            if (data.payload.status === 200) {
+                setloading(false)
+            } else {
+                setloading(false)
+            }
+
+        }
+        fetchdata()
+    }, [])
 
     return (
         <div>
-            <div>
-                <Naavbar />
-                {/* <div>DescriptionPage</div> */}
-                <Link to={'/home'}><Button variant="secondary" className='cart'> Back </Button></Link>
-                <div style={{ display: "flex", flexDirection: "row" }}>
-                    <div>
-                        {Array.isArray(getcartItem) && getcartItem.length>0 ? getcartItem.map((item, index) => (
-                            <div className='cart-div' key={item.id}>
-                                <div className='cart-img'>
-                                    <img src={item.image} height={"100px"} width={"100px"} />
-                                </div>
-
-                                <div className='cart-prod'>
-                                    <h4 className='cart-head'>{item.title}</h4>
-                                    {/* <Rating  name="half-rating" defaultValue={getproductdataById.rating.rate} precision={0.5} readOnly/> */}
-                                    <hr></hr>
-                                    <div className='cart-price-div'>
-                                        <h4 className='cart-price'>Price</h4>
-                                        <h4 className='cart-price'>Rs {item.price} *{item.quantity}</h4>
+            {!loading ?
+                <div>
+                    <Naavbar />
+                    {/* <div>DescriptionPage</div> */}
+                    <Link to={'/home'}><Button variant="secondary" className='cart'> Back </Button></Link>
+                    <div style={{ display: "flex", flexDirection: "row" }}>
+                        <div>
+                            {Array.isArray(getcartItem) && getcartItem.length > 0 ? getcartItem.map((item, index) => (
+                                <div className='cart-div' key={item.id}>
+                                    <div className='cart-img'>
+                                        <img src={item.image} height={"100px"} width={"100px"} />
                                     </div>
-                                    <hr></hr>
 
-                                    <div style={{ display: "flex", justifyContent: "space-between" }}>
-                                        <div>
-                                            <h4 className='cart-product'>Product Details: </h4>
-                                            <p >
-                                                <span className='cart-cat'> Category: </span>
-                                                {item.category}
-                                            </p>
+                                    <div className='cart-prod'>
+                                        <h4 className='cart-head'>{item.title}</h4>
+                                        {/* <Rating  name="half-rating" defaultValue={getproductdataById.rating.rate} precision={0.5} readOnly/> */}
+                                        <hr></hr>
+                                        <div className='cart-price-div'>
+                                            <h4 className='cart-price'>Price</h4>
+                                            <h4 className='cart-price'>Rs {item.price} *{item.quantity}</h4>
                                         </div>
-                                        <Button
-                                            type="button"
-                                            variant="danger"
-                                            style={{ height: "43px", width: "100px" }}
-                                            onClick={(e) => handleRemoveItem(item, item._id)}
-                                        >
-                                            Remove
-                                        </Button>
-                                        <ToastContainer />
+                                        <hr></hr>
+
+                                        <div style={{ display: "flex", justifyContent: "space-between" }}>
+                                            <div>
+                                                <h4 className='cart-product'>Product Details: </h4>
+                                                <p >
+                                                    <span className='cart-cat'> Category: </span>
+                                                    {item.category}
+                                                </p>
+                                            </div>
+                                            <Button
+                                                type="button"
+                                                variant="danger"
+                                                style={{ height: "43px", width: "100px" }}
+                                                onClick={(e) => handleRemoveItem(item, item._id)}
+                                            >
+                                                Remove
+                                            </Button>
+                                        </div>
+
+                                        <hr></hr>
+                                        <div className='cart-total'>
+                                            <div> Total</div>
+                                            <div> {item.price * item.quantity}</div>
+                                        </div>
 
                                     </div>
-
-                                    <hr></hr>
-                                    <div className='cart-total'>
-                                        <div> Total</div>
-                                        <div> {item.price * item.quantity}</div> 
-                                    </div>
-
                                 </div>
-                            </div>
-                        )):<div> <h1 style={{width:"590px"}}>Cart is empty</h1></div>}
-                    </div>
-
-                    <div style={{ display: "flex", flexDirection: "column", width: "100%" }}>
-                        <div className='final-amount' >
-                            <p style={{ fontSize: "17px" }}>SubTotal amount : </p>
-                            <h5>Rs {overallTotal}</h5>
+                            )) : <div> <h1 style={{ width: "590px" }}>Cart is empty</h1></div>}
                         </div>
-                        <div style={{ display: "flex", justifyContent: "center", }}>
-                            <Button
-                                onClick={handlePayment}
-                                type="button"
-                                class="btn btn-warning"
-                                style={{ width: "300px", backgroundColor: "orange", borderColor: "orange" }}
-                            >
-                                Proceed to Buy
-                            </Button>
+
+                        <div style={{ display: "flex", flexDirection: "column", width: "100%" }}>
+                            <div className='final-amount' >
+                                <p style={{ fontSize: "17px" }}>SubTotal amount : </p>
+                                <h5>Rs {overallTotal}</h5>
+                            </div>
+                            <div style={{ display: "flex", justifyContent: "center", }}>
+                                <Button
+                                    onClick={handlePayment}
+                                    type="button"
+                                    class="btn btn-warning"
+                                    style={{ width: "300px", backgroundColor: "orange", borderColor: "orange" }}
+                                >
+                                    Proceed to Buy
+                                </Button>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
+                :
+                <div className="loading-overlay">
+                    <FiLoader className="loading-icon" />
+                </div>
+            }
         </div>
     )
 }
