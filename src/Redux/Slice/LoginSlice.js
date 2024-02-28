@@ -12,7 +12,7 @@ export const signup = createAsyncThunk(
     console.log('nbxjdx', body);
     try {
       const response = await axios.post(
-        'http://localhost:5000/register',
+        'https://node-bkend.onrender.com/register',
         body, // Correctly pass the data as the second argument
         {
           headers: {
@@ -32,10 +32,10 @@ export const signIn = createAsyncThunk(
   async (values, { rejectWithValue }) => {
     try {
       const response = await axios.post(
-        `http://localhost:5000/login`,
+        `https://node-bkend.onrender.com/login`,
         values
       );
-      console.log(response.data)
+      console.log("login data",response.data)
       let result = response.data;
 
       if (result.auth) {
@@ -59,7 +59,7 @@ export const productdata = createAsyncThunk(
     let token = JSON.parse(bearer_token)
     try {
       const response = await axios.get(
-        `http://localhost:5000/products`,
+        `https://node-bkend.onrender.com/products`,
       //    {
       //   headers: {
       //     authorization: `bearer ${token.auth} `
@@ -81,7 +81,7 @@ export const getProductdata = createAsyncThunk(
     let token = JSON.parse(bearer_token)
     try {
       const response = await axios.get(
-        `http://localhost:5000/products/${id}`, 
+        `https://node-bkend.onrender.com/products/${id}`, 
       );
       return response.data;
     } catch (err) {
@@ -98,7 +98,7 @@ export const productInCart = createAsyncThunk(
     let token = JSON.parse(bearer_token)
     try {
       const response = await axios.post(
-        `http://localhost:5000/cartdata`, 
+        `https://node-bkend.onrender.com/cartdata`, 
         body,
         // headers: {
         //   authorization: `bearer ${token.auth} `
@@ -121,9 +121,9 @@ export const UpdatedproductInCart = createAsyncThunk(
     let token = JSON.parse(bearer_token)
     try {
       const response = await axios.put(
-        `http://localhost:5000/cartdata/${id}`, 
+        `https://node-bkend.onrender.com/cartdata/${id}`, 
         body,
-        // headers: {
+        // headers: {  
         //   authorization: `bearer ${token.auth}`
         // }
       
@@ -144,7 +144,7 @@ export const getProductInCart = createAsyncThunk(
     console.log("getProductInCart token",token)
     try {
       const response = await axios.get(
-        `http://localhost:5000/cartdata`, 
+        `https://node-bkend.onrender.com/cartdata`, 
       
       );
       return response.data;
@@ -162,7 +162,7 @@ export const removeProductInCart = createAsyncThunk(
     let token = JSON.parse(bearer_token)
     try {
       const response = await axios.delete(
-        `http://localhost:5000/cartdata/${id}`, 
+        `https://node-bkend.onrender.com/cartdata/${id}`, 
 
       );
       return response.data;
@@ -180,7 +180,7 @@ export const updateProductInCart = createAsyncThunk(
     let token = JSON.parse(bearer_token)
     try {
       const response = await axios.put(
-        `http://localhost:5000/products/${id}`, 
+        `https://node-bkend.onrender.com/products/${id}`, 
         body,
         // headers: {
         //   authorization: `bearer ${token.auth} `

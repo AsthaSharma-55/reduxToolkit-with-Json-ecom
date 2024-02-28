@@ -20,9 +20,6 @@ function Login() {
   });
 
 
-
-
-  
   // Initial form values
   const initialValues = {
     email: '',

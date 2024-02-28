@@ -14,19 +14,20 @@ import { increment, selectCount, getProductInCart } from '../Redux/Slice/LoginSl
 
 function Naavbar() {
     let name = localStorage.getItem('user')
-    let UserName = JSON.parse(name)
+    // let UserName = JSON.parse(name)
     const count = useSelector(selectCount);
     const dispatch = useDispatch()
     const { getcartItem } = useSelector((state) => state.Loginreducer)
     const navigate = useNavigate()
     // const[search,setSearch]=useState('')
-    console.log("UserName==============>", UserName)
+    // console.log("UserName==============>", UserName)
 
     console.log("getcartItem", getcartItem)
 
     const handleLogout = () => {
+        console.log("Logging out...");
         localStorage.clear();
-        navigate('/')
+        navigate('/');
     }
 
     // const handleSearch=(event)=>{
@@ -63,7 +64,7 @@ function Naavbar() {
                             <Nav className="justify-content-end flex-grow-1 pe-3">
                                 <Nav.Link href="/home">Home</Nav.Link>
                                 <NavDropdown
-                                    title={UserName.user.email}
+                                    title={""}
                                     id={`offcanvasNavbarDropdown-expand`}
                                 >
                                     <NavDropdown.Item onClick={handleLogout}>logout</NavDropdown.Item>
