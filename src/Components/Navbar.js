@@ -8,7 +8,6 @@ import NavDropdown from 'react-bootstrap/NavDropdown';
 import Offcanvas from 'react-bootstrap/Offcanvas';
 import './Styles/Navbar.css'
 import { Link, useNavigate } from 'react-router-dom';
-import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import { useDispatch, useSelector } from 'react-redux'
 import { increment, selectCount, getProductInCart } from '../Redux/Slice/LoginSlice'
 
@@ -84,7 +83,7 @@ function Naavbar() {
                                         {/* {count} */}
                                         {getcartItem.length < 0 ? 0 : getcartItem.length}
                                     </p>
-                                    <ShoppingCartIcon style={{ height: "50px", marginLeft: "19px" }} />
+                                    <button>cart</button>
                                 </Link>
                             </div>
                         </Offcanvas.Body>

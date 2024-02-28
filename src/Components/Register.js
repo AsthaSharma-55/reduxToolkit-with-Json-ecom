@@ -5,7 +5,6 @@ import { useDispatch } from 'react-redux';
 import { signup } from '../Redux/Slice/LoginSlice';
 import { useNavigate } from 'react-router-dom';
 import './Styles/Login.css';
-import Button from '@mui/material/Button';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 
@@ -88,13 +87,13 @@ function Register() {
                         </div>
 
                         <div className='field'>
-                            <Button type="submit" className="submit-btn" variant="contained">
+                            <button type="submit" className="submit-btn" variant="contained">
                                 SignUp
-                            </Button>
+                            </button>
                             <Link to={'/'}>
-                                <Button type="submit" className="submit-btn" variant="outlined" style={{ marginTop: '5px' }}>
+                                <button type="submit" className="submit-btn" variant="outlined" style={{ marginTop: '5px' }}>
                                     SignIn
-                                </Button>
+                                </button>
                             </Link>
                         </div>
                     </Form>

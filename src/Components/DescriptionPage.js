@@ -3,7 +3,6 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { getProductdata, productInCart, updateProductInCart, productdata,UpdatedproductInCart,getProductInCart } from '../Redux/Slice/LoginSlice';
 import './Styles/Description.css';
-import Rating from '@mui/material/Rating';
 import Button from 'react-bootstrap/Button';
 import { Link } from 'react-router-dom';
 import Naavbar from './Navbar';

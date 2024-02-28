@@ -5,7 +5,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import { signIn } from '../Redux/Slice/LoginSlice';
 import { useNavigate } from 'react-router-dom';
 import './Styles/Login.css';
-import Button from '@mui/material/Button';
 import { Link } from 'react-router-dom';
 
 function Login() {
@@ -58,13 +57,13 @@ function Login() {
             </div>
 
             <div className='field'>
-              <Button type="submit" className="submit-btn" variant="contained">
+              <button type="submit" className="submit-btn" variant="contained" >
                 Login
-              </Button>
+              </button>
               <Link to={'/register'}>
-                <Button type="submit" className="signup-btn" variant="outlined" style={{ marginTop: "5px" }}>
+                <button type="submit" className="signup-btn" variant="outlined" style={{ marginTop: "5px" }}>
                   SignUp
-                </Button>
+                </button>
               </Link>
             </div>
           </Form>

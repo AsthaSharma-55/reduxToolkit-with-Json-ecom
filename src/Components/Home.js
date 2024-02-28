@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom';
 // import Rating from '@mui/material/Rating';
 import './Styles/Home.css';
 import Naavbar from './Navbar';
-import SearchIcon from '@mui/icons-material/Search';
+// import SearchIcon from '@mui/icons-material/Search';
 
 function Home() {
   const dispatch = useDispatch();
@@ -47,14 +47,14 @@ function Home() {
       <Naavbar />
       <h1 className='head'>Page</h1>
       <div>
-        <SearchIcon className='search' />
+        {/* <SearchIcon className='search' />
         <input
           type="text"
           placeholder="Search"
           value={searchPhrase}
           onChange={search}
           style={{ marginLeft: "10px", width: "200px", borderRadius: "5px" }}
-        />
+        /> */}
       </div>
       <div style={{ display: 'flex', flexWrap: 'wrap' }}>
         {productItemData.length>0? productItemData.map((item, index) => (
