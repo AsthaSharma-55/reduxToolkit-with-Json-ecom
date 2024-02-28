@@ -26,8 +26,8 @@ function Login() {
 
   // Initial form values
   const initialValues = {
-    email: 'asthasharma11@yopmail.com',
-    password: 'astha@123',
+    email: '',
+    password: '',
   };
 
   // Submit function
